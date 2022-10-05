@@ -8,17 +8,17 @@ def lenhex(hexcol: hex) -> str:
 
 def strtohexcolor(labels: array, alpha: str) -> list:
     return [lenhex(hex(i)) + alpha for i in append(linspace(0x008, 0xf8c,
-                                                            len(labels) // 2 + len(labels) % 2, dtype=int32),
+                                                            len(labels) // 2, dtype=int32),
                                                    linspace(0x0be, 0xf00,
-                                                            len(labels) // 2,
+                                                            len(labels) // 2 + len(labels) % 2,
                                                             dtype=int32))]
 
 
 def inttohexcolor(labels: array, alpha: str) -> list:
     b = list(zip([lenhex(hex(i)) + alpha for i in append(linspace(0x008, 0xf8c,
-                                                                  len(labels) // 2 + len(labels) % 2, dtype=int32),
+                                                                  len(labels) // 2, dtype=int32),
                                                          linspace(0x0be, 0xf00,
-                                                                  len(labels) // 2,
+                                                                  len(labels) // 2 + len(labels) % 2,
                                                                   dtype=int32))], labels))
     b.sort(key=lambda x: x[1])
     return list(zip(*b))[0]
@@ -38,10 +38,9 @@ def grapharr(method: str, legend: array, x: array, fx: list,
     colorlegends = empty(len(legend), dtype=object)
     for i, el in enumerate(uniquelegend):
         colorlegends[legend == el] = colors[i]
-    print(list(zip(uniquelegend, colors)))
     del colors, uniquelegend
     uniq = list()
-    if legend.dtype == "object" or legend.dtype == "int64":
+    if legend.dtype == "object":
         for i, el in enumerate(fx):
             plt.plot(x, el, c=colorlegends[i], linewidth=width,
                      label=legend[i] if legend[i] not in uniq else "")
