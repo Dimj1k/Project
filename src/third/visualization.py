@@ -29,26 +29,24 @@ def colorize(y: array, alpha: str) -> list:
 
 
 def grapharr(method: str, legend: array, x: array, fx: list,
-             name: str = "Figure", alpha: str = "f", width: float = 1.5, fcolor: str = "white") -> None:
-    plt.axes().set_facecolor(fcolor)
+             name: str = "Figure", alpha: str = "f") -> None:
     plt.xlim(x.min(), x.max())
     plt.title(method)
     plt.get_current_fig_manager().canvas.set_window_title(name)
-    uniquelegend = unique(legend)
-    colors = colorize(uniquelegend, alpha)
+    colors = colorize(legend, alpha)
     colorlegends = empty(len(legend), dtype=object)
-    for i, el in enumerate(uniquelegend):
+    for i, el in enumerate(unique(legend)):
         colorlegends[legend == el] = colors[i]
-    del colors, uniquelegend
+    del colors
     uniq = list()
     if legend.dtype == "object":
         for i, el in enumerate(fx):
-            plt.plot(x, el, c=colorlegends[i], linewidth=width,
+            plt.plot(x, el, c=colorlegends[i],
                      label=legend[i] if legend[i] not in uniq else "")
             None if legend[i] in uniq else uniq.append(legend[i])
         plt.legend(loc=0)
     else:
-        [plt.plot(x, el, c=colorlegends[i], linewidth=width) for i, el in enumerate(fx)]
+        [plt.plot(x, el, c=colorlegends[i]) for i, el in enumerate(fx)]
     plt.show()
 
 
