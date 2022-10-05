@@ -8,7 +8,8 @@ def lenhex(hexcol: hex) -> str:
 
 def strtohexcolor(labels: array, alpha: str) -> list:
     lens = len(labels)
-    a = [lens // 3, *([(lens - lens // 3) // 2] * 2)] if lens != 1 else [0, 0, 1]
+    a = [lens // 3, (lens - lens // 3) // 2, (lens - lens // 3) // 2 + (lens - lens // 3) % 2] \
+        if lens != 1 else [0, 0, 1]
     return [lenhex(hex(i)) + alpha for i in append(append(linspace(0x60f, 0x0fd,
                                                                    a[0],
                                                                    dtype=int32),
@@ -16,7 +17,7 @@ def strtohexcolor(labels: array, alpha: str) -> list:
                                                                    a[1],
                                                                    dtype=int32)),
                                                    linspace(0xff0, 0xf00,
-                                                            a[3],
+                                                            a[2],
                                                             dtype=int32))]
 
 
