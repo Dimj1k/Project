@@ -29,7 +29,8 @@ def colorize(y: array, alpha: str) -> list:
 
 
 def grapharr(method: str, legend: array, x: array, fx: list,
-             name: str = "Figure", alpha: str = "f", width: float = 1.5) -> None:
+             name: str = "Figure", alpha: str = "f", width: float = 1.5, fcolor: str = "white") -> None:
+    plt.axes().set_facecolor(fcolor)
     plt.xlim(x.min(), x.max())
     plt.title(method)
     plt.get_current_fig_manager().canvas.set_window_title(name)
