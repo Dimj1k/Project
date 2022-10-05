@@ -19,13 +19,13 @@ def main() -> None:
         a = AndrewsCurve()
         grapharr("Диаграмма Эндрюса", bata.Y, a.theta, [i for i in a.curves(bata.X)])
     elif method == 2:
-        radviz(bata.getdfxlsx(0, 1).df[bata.sheets[0]].join(bata.df[bata.sheets[1]]), bata.Yname,
-               color=colorize(bata.Y, "f"))
-        graphdf(bata.Y, "RadViz")
-    else:
         parallel_coordinates(bata.getdfxlsx(0, 1).df[bata.sheets[0]].join(bata.df[bata.sheets[1]]), bata.Yname,
                              color=colorize(bata.Y, "f"))
         graphdf(bata.Y, "Параллельные координаты")
+    else:
+        radviz(bata.getdfxlsx(0, 1).df[bata.sheets[0]].join(bata.df[bata.sheets[1]]), bata.Yname,
+               color=colorize(bata.Y, "f"))
+        graphdf(bata.Y, "RadViz")
     return againli()
 
 
