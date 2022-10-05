@@ -5,6 +5,8 @@ from src.third.methodsVisualization import AndrewsCurve, parallel_coordinates, r
 
 def main() -> None:
     file = input("Введите название файла excel с данными: ")
+    if file == "quit":
+        exit()
     try:
         bata = Data(file)
     except FileExistsError:
