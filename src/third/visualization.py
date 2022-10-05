@@ -1,31 +1,46 @@
 import matplotlib.pyplot as plt
-from numpy import array, unique, empty, int32, linspace, append
+from numpy import array, unique, empty, int32, linspace, append, sort, argsort
 
 
 def lenhex(hexcol: hex) -> str:
-    return "#" + "0" * (4 - len(hexcol)) + hexcol[2:]
+    return "#" + "0" * (5 - len(hexcol)) + hexcol[2:]
 
 
 def strtohexcolor(labels: array, alpha: str) -> list:
-    return [lenhex(hex(i)) + alpha for i in append(linspace(0x008, 0xf8c,
-                                                            len(labels) // 2, dtype=int32),
-                                                   linspace(0x0be, 0xf00,
-                                                            len(labels) // 2 + len(labels) % 2,
+    lens = len(labels)
+    a = [lens // 3, *([(lens - lens // 3) // 2] * 2)] if lens != 1 else [0, 0, 1]
+    return [lenhex(hex(i)) + alpha for i in append(append(linspace(0x60f, 0x0fd,
+                                                                   a[0],
+                                                                   dtype=int32),
+                                                          linspace(0x0f0, 0xfc0,
+                                                                   a[1],
+                                                                   dtype=int32)),
+                                                   linspace(0xff0, 0xf00,
+                                                            a[3],
                                                             dtype=int32))]
 
 
 def inttohexcolor(labels: array, alpha: str) -> list:
-    b = list(zip([lenhex(hex(i)) + alpha for i in append(linspace(0x008, 0xf8c,
-                                                                  len(labels) // 2, dtype=int32),
-                                                         linspace(0x0be, 0xf00,
-                                                                  len(labels) // 2 + len(labels) % 2,
-                                                                  dtype=int32))], labels))
-    b.sort(key=lambda x: x[1])
-    return list(zip(*b))[0]
+    lens = len(labels)
+    a = [lens // 3, (lens - lens // 3) // 2, (lens - lens // 3) // 2 + (lens - lens // 3) % 2] \
+        if lens != 1 else [0, 0, 1]
+    return [lenhex(hex(i)) + alpha for i in append(append(linspace(0x60f, 0x0fd,
+                                                                   a[0],
+                                                                   dtype=int32),
+                                                          linspace(0x0f0, 0xfc0,
+                                                                   a[1],
+                                                                   dtype=int32)),
+                                                   linspace(0xff0, 0xf00,
+                                                            a[2],
+                                                            dtype=int32))]
 
 
-def colorize(y: array, alpha: str) -> list:
-    return strtohexcolor(unique(y), alpha) if y.dtype == "object" else inttohexcolor(unique(y), alpha)
+def colorize(y: array, alpha: str, sortli: bool = False) -> list:
+    if y.dtype == "object":
+        return strtohexcolor(unique(y), alpha)
+    if sortli:
+        return array(inttohexcolor(unique(y), alpha))[argsort(y[sort(unique(y, return_index=True)[1])])]
+    return inttohexcolor(unique(y), alpha)
 
 
 def grapharr(method: str, legend: array, x: array, fx: list,
@@ -39,7 +54,7 @@ def grapharr(method: str, legend: array, x: array, fx: list,
         colorlegends[legend == el] = colors[i]
     del colors
     uniq = list()
-    if legend.dtype == "object":
+    if legend.dtype == "object" or legend.dtype == "int64":
         for i, el in enumerate(fx):
             plt.plot(x, el, c=colorlegends[i],
                      label=legend[i] if legend[i] not in uniq else "")
@@ -53,5 +68,5 @@ def grapharr(method: str, legend: array, x: array, fx: list,
 def graphdf(Y, method: str, name: str = "Figure") -> None:
     plt.title(method)
     plt.get_current_fig_manager().canvas.set_window_title(name)
-    plt.gca().legend_.remove() if Y.dtype != "object" else None
+    # plt.gca().legend_.remove() if Y.dtype != "object" else None
     plt.show()
