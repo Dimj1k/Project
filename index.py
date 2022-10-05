@@ -21,12 +21,18 @@ def main() -> None:
         a = AndrewsCurve()
         grapharr("Диаграмма Эндрюса", bata.Y, a.theta, [i for i in a.curves(bata.X)])
     elif method == 2:
-        parallel_coordinates(bata.getdfxlsx(0, 1).df[bata.sheets[0]].join(bata.df[bata.sheets[1]]), bata.Yname,
-                             color=colorize(bata.Y, "f"))
+        bata.getdfxlsx(0, 1)
+        parallel_coordinates(frame=bata.df[bata.sheets[0]].join(bata.df[bata.sheets[1]])
+                             .sort_values(by=bata.Yname) if bata.Y.dtype != "object"
+                             else bata.getdfxlsx(0, 1).df[bata.sheets[0]].join(bata.df[bata.sheets[1]]),
+                             class_column=bata.Yname, color=colorize(bata.Y, "f"))
         graphdf(bata.Y, "Параллельные координаты")
     else:
-        radviz(bata.getdfxlsx(0, 1).df[bata.sheets[0]].join(bata.df[bata.sheets[1]]), bata.Yname,
-               color=colorize(bata.Y, "f"))
+        bata.getdfxlsx(0, 1)
+        radviz(frame=bata.df[bata.sheets[0]].join(bata.df[bata.sheets[1]])
+               .sort_values(by=bata.Yname) if bata.Y.dtype != "object"
+               else bata.getdfxlsx(0, 1).df[bata.sheets[0]].join(bata.df[bata.sheets[1]]),
+               class_column=bata.Yname, color=colorize(bata.Y, "f"))
         graphdf(bata.Y, "RadViz")
     return againli()
 
