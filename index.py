@@ -1,6 +1,6 @@
 from src.read_data import Data
 from src.third.visualization import grapharr, graphdf, colorize
-from src.third.methodsVisualization import AndrewsCurve, parallel_coordinates
+from src.third.methodsVisualization import AndrewsCurve, parallel_coordinates, radviz
 
 
 def main() -> None:
@@ -11,18 +11,22 @@ def main() -> None:
         print("Файл не найден")
         return main()
     print("Файл найден")
-    method = int(input("Выберите метод (число 1 или любое целое): "))
+    method = int(input("Выберите метод (число 1, 2 или любое целое): "))
     print("Чтение данных с файла")
 
     if method == 1:
         bata.getdftoarrayxlsx(0, 1)
         a = AndrewsCurve()
         grapharr("Диаграмма Эндрюса", bata.Y, a.theta, [i for i in a.curves(bata.X)])
+    elif method == 2:
+        radviz(bata.getdfxlsx(0, 1).df[bata.sheets[0]].join(bata.df[bata.sheets[1]]), bata.Yname,
+               color=colorize(bata.Y, "f"))
+        graphdf(bata.Y, "RadViz")
     else:
         parallel_coordinates(bata.getdfxlsx(0, 1).df[bata.sheets[0]].join(bata.df[bata.sheets[1]]), bata.Yname,
-                             color=colorize(bata.Y, "ff"))
+                             color=colorize(bata.Y, "f"))
         graphdf(bata.Y, "Параллельные координаты")
-    againli()
+    return againli()
 
 
 def againli() -> None:
@@ -31,7 +35,7 @@ def againli() -> None:
         return main()
     elif again.lower() == "y" or again.lower() == "н":
         exit()
-    againli()
+    return againli()
 
 
 if __name__ == "__main__":
