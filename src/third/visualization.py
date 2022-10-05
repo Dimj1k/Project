@@ -1,17 +1,27 @@
 import matplotlib.pyplot as plt
-from numpy import array, unique, empty, linspace, int32
+from numpy import array, unique, empty, int32, linspace, append
 
 
 def lenhex(hexcol: hex) -> str:
-    return "#" + "0" * (8 - len(hexcol)) + hexcol[2:]
+    return "#" + "0" * (4 - len(hexcol)) + hexcol[2:]
 
 
 def strtohexcolor(labels: array, alpha: str) -> list:
-    return [lenhex(hex(i)) + alpha for i in linspace(0x0000ff, 0xff0000, len(labels), dtype=int32)]
+    return [lenhex(hex(i)) + alpha for i in append(linspace(0x008, 0xf8c,
+                                                            len(labels) // 2 + len(labels) % 2, dtype=int32),
+                                                   linspace(0x0be, 0xf00,
+                                                            len(labels) // 2,
+                                                            dtype=int32))]
 
 
 def inttohexcolor(labels: array, alpha: str) -> list:
-    return [lenhex(hex(i)) + alpha for i in labels]
+    b = list(zip([lenhex(hex(i)) + alpha for i in append(linspace(0x008, 0xf8c,
+                                                                  len(labels) // 2 + len(labels) % 2, dtype=int32),
+                                                         linspace(0x0be, 0xf00,
+                                                                  len(labels) // 2,
+                                                                  dtype=int32))], labels))
+    b.sort(key=lambda x: x[1])
+    return list(zip(*b))[0]
 
 
 def colorize(y: array, alpha: str) -> list:
@@ -19,7 +29,7 @@ def colorize(y: array, alpha: str) -> list:
 
 
 def grapharr(method: str, legend: array, x: array, fx: list,
-             name: str = "Figure", alpha: str = "ff", width: float = 1.5) -> None:
+             name: str = "Figure", alpha: str = "f", width: float = 1.5) -> None:
     plt.xlim(x.min(), x.max())
     plt.title(method)
     plt.get_current_fig_manager().canvas.set_window_title(name)
@@ -28,9 +38,10 @@ def grapharr(method: str, legend: array, x: array, fx: list,
     colorlegends = empty(len(legend), dtype=object)
     for i, el in enumerate(uniquelegend):
         colorlegends[legend == el] = colors[i]
+    print(list(zip(uniquelegend, colors)))
     del colors, uniquelegend
     uniq = list()
-    if legend.dtype == "object":
+    if legend.dtype == "object" or legend.dtype == "int64":
         for i, el in enumerate(fx):
             plt.plot(x, el, c=colorlegends[i], linewidth=width,
                      label=legend[i] if legend[i] not in uniq else "")
