@@ -1,5 +1,6 @@
 from numpy import linspace, pi, sin, cos, sqrt, array
 from pandas.plotting import parallel_coordinates
+from pandas.plotting import radviz
 
 
 class AndrewsCurve:
