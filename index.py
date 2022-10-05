@@ -3,7 +3,7 @@ from src.third.visualization import grapharr, graphdf, colorize
 from src.third.methodsVisualization import AndrewsCurve, parallel_coordinates, radviz
 
 
-def main() -> None:
+def main(alpha: str = "f") -> None:
     file = input("Введите название файла excel с данными: ")
     if file == "quit":
         exit()
@@ -24,15 +24,15 @@ def main() -> None:
         bata.getdfxlsx(0, 1)
         parallel_coordinates(frame=bata.df[bata.sheets[0]].join(bata.df[bata.sheets[1]])
                              .sort_values(by=bata.Yname) if bata.Y.dtype != "object"
-                             else bata.getdfxlsx(0, 1).df[bata.sheets[0]].join(bata.df[bata.sheets[1]]),
-                             class_column=bata.Yname, color=colorize(bata.Y, "f"))
+                             else bata.df[bata.sheets[0]].join(bata.df[bata.sheets[1]]),
+                             class_column=bata.Yname, color=colorize(bata.Y, alpha))
         graphdf(bata.Y, "Параллельные координаты")
     else:
         bata.getdfxlsx(0, 1)
         radviz(frame=bata.df[bata.sheets[0]].join(bata.df[bata.sheets[1]])
                .sort_values(by=bata.Yname) if bata.Y.dtype != "object"
-               else bata.getdfxlsx(0, 1).df[bata.sheets[0]].join(bata.df[bata.sheets[1]]),
-               class_column=bata.Yname, color=colorize(bata.Y, "f"))
+               else bata.df[bata.sheets[0]].join(bata.df[bata.sheets[1]]),
+               class_column=bata.Yname, color=colorize(bata.Y, alpha))
         graphdf(bata.Y, "RadViz")
     return againli()
 
