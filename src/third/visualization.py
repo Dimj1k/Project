@@ -6,26 +6,19 @@ def lenhex(hexcol: hex) -> str:
     return "#" + "0" * (5 - len(hexcol)) + hexcol[2:]
 
 
-def strtohexcolor(labels: array, alpha: str) -> list:
+def tohexcolor(labels: array, alpha: str) -> list:
     lens = len(labels)
-    a = [lens // 3, (lens - lens // 3) // 2, (lens - lens // 3) // 2 + (lens - lens // 3) % 2] \
+    a = [lens // 3, (lens - lens // 3) // 2 + (lens - lens // 3) % 2, (lens - lens // 3) // 2] \
         if lens != 1 else [0, 0, 1]
-    return [lenhex(hex(i)) + alpha for i in append(append(linspace(0x60f, 0x0fd, a[0], dtype=int32),
-                                                          linspace(0x0f0, 0xfc0, a[1], dtype=int32)),
-                                                   linspace(0xf00, 0xff0, a[2], dtype=int32))]
-
-
-def inttohexcolor(labels: array, alpha: str) -> list:
-    lens = len(labels)
-    a = [lens // 3, (lens - lens // 3) // 2, (lens - lens // 3) // 2 + (lens - lens // 3) % 2] \
-        if lens != 1 else [0, 0, 1]
-    return [lenhex(hex(i)) + alpha for i in append(append(linspace(0x60f, 0x0fd, a[0], dtype=int32),
-                                                          linspace(0x0f0, 0xfc0, a[1], dtype=int32)),
-                                                   linspace(0xff0, 0xf00, a[2], dtype=int32))]
+    return [lenhex(hex(i)) + alpha for i in append(append(linspace(0x00f, 0x0f8, a[0], dtype=int32),
+                                                          append(linspace(0x0fa, 0x60f, a[1] // 2, dtype=int32),
+                                                                 linspace(0x70f, 0xa50, a[1] // 2 + a[1] % 2,
+                                                                          dtype=int32))),
+                                                   linspace(0xfe0, 0xd00, a[2], dtype=int32))]
 
 
 def colorize(y: array, alpha: str) -> list:
-    return strtohexcolor(unique(y), alpha) if y.dtype == "object" else inttohexcolor(unique(y), alpha)
+    return tohexcolor(unique(y), alpha)
 
 
 def grapharr(method: str, legend: array, x: array, fx: list,
